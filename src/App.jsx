@@ -14,11 +14,12 @@ function useRoute() {
     return () => removeEventListener('hashchange', f);
   }, []);
   const [path, query = ''] = hash.replace(/^#\/?/, '').split('?');
-  return { parts: path.split('/').filter(Boolean), q: new URLSearchParams(query).get('q') || '', key: hash };
+  const params = new URLSearchParams(query);
+  return { parts: path.split('/').filter(Boolean), q: params.get('q') || '', searchService: params.get('service') || '', key: hash };
 }
 
 export default function App() {
-  const { parts, q, key } = useRoute();
+  const { parts, q, searchService, key } = useRoute();
   const main = useRef(null);
   const first = useRef(true);
   useEffect(() => {
@@ -34,7 +35,7 @@ export default function App() {
   if (!a) page = <Home />;
   else if (a === 'busca') page = <SearchPage q={q} />;
   else if (section && !b) page = <SectionPage section={section} />;
-  else if (section && topic) page = <TopicPage section={section} topic={topic} />;
+  else if (section && topic) page = <TopicPage section={section} topic={topic} searchService={searchService} />;
   else page = <div className="container page"><Breadcrumb items={[{ label: 'Página não encontrada' }]} /><h1>Página não encontrada</h1><p>O endereço não existe. Volte ao início e escolha uma área.</p><BackHome /></div>;
 
   return (

@@ -3,17 +3,17 @@ import { Breadcrumb, BackHome } from '../components/Layout.jsx';
 import { SectionHeader, ExternalLinkCard, EmergencyCard, EmptyNotice } from '../components/Cards.jsx';
 import { RESOURCES } from '../data/resources.js';
 import { EDITORIAL, EDITORIAL_REVIEWED_AT } from '../data/editorial.js';
-import { findNearbyPlaces } from '../utils/googlePlaces.js';
 
-function LocalServiceSearch() {
-  const [service, setService] = useState('Delegacia Especializada de Atendimento à Mulher (DEAM)');
+const DEAM_SERVICE = 'Delegacia Especializada de Atendimento à Mulher (DEAM)';
+const POLICE_SERVICE = 'Delegacia de polícia';
+
+function LocalServiceSearch({ requestedService }) {
+  const [service, setService] = useState(requestedService === 'police' ? POLICE_SERVICE : DEAM_SERVICE);
   const [otherService, setOtherService] = useState('');
   const [city, setCity] = useState('');
   const [coordinates, setCoordinates] = useState(null);
   const [message, setMessage] = useState('');
   const [searchUrl, setSearchUrl] = useState('');
-  const [places, setPlaces] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const locationRequest = useRef(0);
   const activeService = service === 'Outro serviço' ? otherService.trim() : service;
@@ -30,7 +30,6 @@ function LocalServiceSearch() {
   function cancelLocationRequest() {
     locationRequest.current += 1;
     setIsLocating(false);
-    setIsSearching(false);
   }
 
   function submit(event) {
@@ -45,33 +44,8 @@ function LocalServiceSearch() {
       setSearchUrl('');
       return;
     }
-    searchPlaces({ serviceName: activeService, location: coordinates, city: city.trim() });
-  }
-
-  async function searchPlaces({ serviceName = activeService, location = coordinates, city: cityName = city.trim() } = {}) {
-    const requestId = ++locationRequest.current;
-    setPlaces([]);
-    setSearchUrl(makeMapsUrl(serviceName, { coordinates: location, city: cityName }));
-    setIsSearching(true);
-    setMessage('Buscando locais próximos…');
-    try {
-      const found = await findNearbyPlaces({ serviceName, location, city: cityName });
-      if (requestId !== locationRequest.current) return;
-      setPlaces(found);
-      setMessage(found.length
-        ? `O Google encontrou ${found.length} ${found.length === 1 ? 'resultado' : 'resultados'} nesta busca. A lista mostra até 10 locais; confirme endereço e atendimento antes de sair.`
-        : 'Nenhum local apareceu nesta busca. Tente outro termo, aumente a área no Google Maps ou pesquise por município.');
-    } catch (error) {
-      if (requestId !== locationRequest.current) return;
-      setPlaces([]);
-      if (error?.message === 'MISSING_API_KEY') {
-        setMessage('A busca detalhada ainda precisa de uma chave do Google Places. Por enquanto, abra os resultados no Google Maps.');
-      } else {
-        setMessage('Não foi possível consultar os locais agora. Você ainda pode abrir a busca no Google Maps.');
-      }
-    } finally {
-      if (requestId === locationRequest.current) setIsSearching(false);
-    }
+    setSearchUrl(makeMapsUrl(activeService, { coordinates, city: city.trim() }));
+    setMessage('Busca preparada. Abra os resultados no Google Maps e confirme endereço e atendimento antes de sair.');
   }
 
   function locate() {
@@ -81,7 +55,6 @@ function LocalServiceSearch() {
     }
     setCoordinates(null);
     setSearchUrl('');
-    setPlaces([]);
     if (!navigator.geolocation) {
       setMessage('Este navegador não oferece localização. Informe o município para pesquisar.');
       return;
@@ -97,7 +70,8 @@ function LocalServiceSearch() {
           setIsLocating(false);
           setCoordinates(currentCoordinates);
           setCity('');
-          searchPlaces({ serviceName: activeService, location: currentCoordinates, city: '' });
+          setSearchUrl(makeMapsUrl(activeService, { coordinates: currentCoordinates }));
+          setMessage('Localização obtida. Abra os resultados no Google Maps e confirme o endereço e o atendimento antes de sair.');
         },
         (error) => {
           if (requestId !== locationRequest.current) return;
@@ -124,10 +98,10 @@ function LocalServiceSearch() {
 
   return (
     <div className="local-search">
-      <p>Escolha um serviço e pesquise por município ou localização. Os resultados vêm do Google Places e podem não incluir todos os serviços públicos.</p>
+      <p>Escolha um serviço e pesquise por município ou localização. A busca abre no Google Maps, que pode não mostrar todos os serviços públicos ou informações atualizadas.</p>
       <form onSubmit={submit}>
         <label htmlFor="local-service">Qual serviço você procura?</label>
-        <select id="local-service" value={service} onChange={(event) => { cancelLocationRequest(); setService(event.target.value); setSearchUrl(''); setPlaces([]); setMessage(''); }}>
+        <select id="local-service" value={service} onChange={(event) => { cancelLocationRequest(); setService(event.target.value); setSearchUrl(''); setMessage(''); }}>
           <optgroup label="Proteção e segurança">
             <option value="Delegacia Especializada de Atendimento à Mulher (DEAM)">Delegacia Especializada de Atendimento à Mulher (DEAM)</option>
             <option value="Delegacia de polícia">Delegacia de polícia</option>
@@ -158,51 +132,36 @@ function LocalServiceSearch() {
         {service === 'Outro serviço' && (
           <>
             <label htmlFor="other-local-service">Escreva o nome do serviço</label>
-            <input id="other-local-service" value={otherService} onChange={(event) => { cancelLocationRequest(); setOtherService(event.target.value); setSearchUrl(''); setPlaces([]); setMessage(''); }} placeholder="Ex.: Centro de Referência em Direitos Humanos" />
+            <input id="other-local-service" value={otherService} onChange={(event) => { cancelLocationRequest(); setOtherService(event.target.value); setSearchUrl(''); setMessage(''); }} placeholder="Ex.: Centro de Referência em Direitos Humanos" />
           </>
         )}
         <label htmlFor="local-city">Município de Pernambuco</label>
-        <input id="local-city" value={city} onChange={(event) => { cancelLocationRequest(); setCity(event.target.value); setCoordinates(null); setSearchUrl(''); setPlaces([]); setMessage(''); }} placeholder="Ex.: Caruaru, Petrolina ou Recife" />
+        <input id="local-city" value={city} onChange={(event) => { cancelLocationRequest(); setCity(event.target.value); setCoordinates(null); setSearchUrl(''); setMessage(''); }} placeholder="Ex.: Caruaru, Petrolina ou Recife" />
         <div className="local-search-actions">
           <button className="btn" type="button" onClick={locate} disabled={isLocating} aria-busy={isLocating}>{isLocating ? 'Obtendo localização…' : 'Usar minha localização atual'}</button>
-          <button className="btn btn-yellow" type="submit" disabled={isLocating || isSearching}>{isSearching ? 'Buscando locais…' : 'Buscar serviço'}</button>
+          <button className="btn btn-yellow" type="submit" disabled={isLocating}>Buscar serviço</button>
         </div>
         {coordinates && <p className="location-state">Localização aproximada pronta para esta busca.</p>}
       </form>
-      <p className="local-search-note">Sua localização é enviada ao Google para fazer esta busca e não é salva pelo site. A distância exibida é aproximada em linha reta. Confirme endereço, horário e atendimento antes de sair.</p>
-      {womenPoliceSearch && (
+      <p className="local-search-note">Sua localização só é compartilhada com o Google Maps quando você abre os resultados. Confirme endereço, horário e atendimento antes de sair.</p>
+      {searchUrl && womenPoliceSearch && (
         <div className="official-local-source" role="note">
           <strong>Vai procurar uma Delegacia da Mulher?</strong>
           <p>O Google Maps pode mostrar endereço antigo. Confira também a <a href={RESOURCES['deams-pe-directory'].url} target="_blank" rel="noopener noreferrer">lista de endereços e telefones do MPPE</a>. Se não houver unidade especializada no município, a orientação do MPPE é procurar uma delegacia comum próxima.</p>
         </div>
       )}
       <p className="local-search-status" role="status" aria-live="polite">{message}</p>
-      {places.length > 0 && <section className="nearby-results" aria-label="Locais encontrados">
-        <h2>{places.length} {places.length === 1 ? 'local encontrado' : 'locais encontrados'} <span>Dados de locais: Google</span></h2>
-        <ol>{places.map((place, index) => <li key={place.id || place.googleMapsURI || `${place.name}-${index}`}>
-          <div><strong>{place.name}</strong>
-            {place.distanceMeters != null && <span className="nearby-distance">{formatDistance(place.distanceMeters)} de você</span>}
-            <p>{place.address || 'Endereço não informado pelo Google.'}</p>
-          </div>
-          <a href={place.googleMapsURI || makeMapsUrl(place.name, { coordinates, city: city.trim() })} target="_blank" rel="noopener noreferrer">Ver no Google Maps<span className="sr-only"> (abre em nova aba)</span></a>
-        </li>)}</ol>
-      </section>}
       {searchUrl && <a className="btn map-results" href={searchUrl} target="_blank" rel="noopener noreferrer">Abrir resultados no Google Maps<span className="sr-only"> (abre em nova aba)</span></a>}
     </div>
   );
 }
 
-function formatDistance(meters) {
-  if (meters < 1000) return `${Math.round(meters)} m`;
-  return `${(meters / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} km`;
-}
-
-export default function TopicPage({ section, topic }) {
+export default function TopicPage({ section, topic, searchService = '' }) {
   const editorial = EDITORIAL[`${section.id}/${topic.id}`];
   const r = topic.res;
   let body;
   if (r === 'EMERGENCY') body = <EmergencyCard />;
-  else if (r === 'MAP') body = <LocalServiceSearch />;
+  else if (r === 'MAP') body = <LocalServiceSearch key={searchService} requestedService={searchService} />;
   else if (r === 'GROUPED') {
     const ids = Object.keys(RESOURCES).filter((id) => RESOURCES[id].kind !== 'tel');
     const groups = [...new Set(ids.map((id) => RESOURCES[id].group))];
@@ -231,11 +190,27 @@ export default function TopicPage({ section, topic }) {
   else if (r.length) body = <div className="grid">{r.map((id) => <ExternalLinkCard key={id} id={id} />)}</div>;
   else body = <EmptyNotice title={topic.title} />;
 
+  const nearbyService = section.id === 'denuncias' && topic.id === 'crimes'
+    || section.id === 'servicos-publicos' && topic.id === 'seguranca'
+    ? 'police'
+    : (section.id === 'preciso-de-ajuda' && topic.id === 'violencia'
+      || section.id === 'denuncias' && topic.id === 'violencia'
+      || section.id === 'meus-direitos' && topic.id === 'mulheres')
+      ? 'deam'
+      : '';
+
   return (
     <div className="container page">
       <Breadcrumb items={[{ label: section.label, href: `#/${section.id}` }, { label: topic.title }]} />
       <SectionHeader title={topic.title} sub={topic.desc} />
       {body}
+      {nearbyService && <aside className="contextual-local-search">
+        <h2>{nearbyService === 'deam' ? 'Precisa de atendimento presencial?' : 'Quer procurar uma delegacia perto de você?'}</h2>
+        <p>{nearbyService === 'deam'
+          ? 'A busca de locais abrirá com Delegacia da Mulher selecionada. Informe seu município ou use sua localização; se não houver unidade especializada, considere uma delegacia comum próxima.'
+          : 'A busca de locais abrirá com delegacia selecionada. Informe seu município ou use sua localização e confirme o endereço antes de se deslocar.'}</p>
+        <a className="btn btn-yellow" href={`#/encontre-um-local/mapa?service=${nearbyService}`}>{nearbyService === 'deam' ? 'Buscar Delegacia da Mulher' : 'Buscar uma delegacia'}</a>
+      </aside>}
       <div className="actions"><a className="btn" href={`#/${section.id}`}>← {section.label}</a><BackHome /></div>
     </div>
   );
