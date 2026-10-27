@@ -10,6 +10,8 @@ const STOP_WORDS = new Set([
 
 // Sinônimos de busca ajudam quando a pessoa descreve a situação com outras palavras.
 const SYNONYMS = {
+  assedio: ['trabalho', 'mpt', 'denúncia trabalhista'],
+  contracheque: ['salário', 'trabalho', 'pagamento'],
   advogado: ['defensoria', 'orientação jurídica', 'atendimento jurídico'],
   advogada: ['defensoria', 'orientação jurídica', 'atendimento jurídico'],
   aluguel: ['moradia', 'habitação', 'casa'],
@@ -29,6 +31,7 @@ const SYNONYMS = {
   desemprego: ['emprego', 'trabalho', 'seguro desemprego'],
   documentacao: ['documento', 'cpf', 'cin', 'identidade'],
   emprego: ['trabalho', 'vaga', 'sine', 'carteira de trabalho'],
+  fgts: ['trabalho', 'salário', 'demissão'],
   escola: ['educação', 'ensino', 'matrícula'],
   estelionato: ['golpe', 'fraude'],
   fraude: ['golpe', 'estelionato'],
@@ -45,6 +48,9 @@ const SYNONYMS = {
   ongs: ['organização', 'organizações da sociedade civil'],
   pensao: ['benefício', 'bpc', 'idoso'],
   pagamento: ['salário', 'trabalho', 'benefício', 'consumidor'],
+  registro: ['carteira de trabalho', 'trabalho', 'vínculo'],
+  registrado: ['carteira de trabalho', 'trabalho', 'vínculo'],
+  rescisao: ['demissão', 'trabalho', 'seguro desemprego'],
   pagaram: ['salário', 'trabalho', 'emprego'],
   pagam: ['salário', 'trabalho', 'emprego'],
   procon: ['consumidor', 'empresa', 'reclamação'],
@@ -72,6 +78,7 @@ const ROUTE_KEYWORDS = {
   'servicos-publicos/assistencia-social': 'cras cadunico cadastro único benefício assistência social',
   'servicos-publicos/documentacao': 'cpf identidade cin rg documento pernambuco',
   'meus-direitos/trabalho': 'trabalho vaga carteira clt sine emprego salário salário férias demissão demitido hora extra',
+  'preciso-de-ajuda/trabalho': 'trabalho salário atrasado salário não pago férias fgts demitido demissão seguro desemprego registro carteira sem carteira assédio discriminação irregularidade horas extras vínculo rescisão contracheque',
   'servicos-publicos/emprego': 'trabalho vaga carteira clt sine emprego salário desemprego seguro demissão',
   'servicos-publicos/beneficios': 'bpc bolsa família cadastro único idoso benefício assistência social baixa renda pobreza pessoa deficiência',
   'encontre-um-local/atendimento-juridico': 'advogado advogada defensoria gratuita assistência jurídica',

@@ -3,6 +3,7 @@ import { Breadcrumb, BackHome } from '../components/Layout.jsx';
 import { SectionHeader, ExternalLinkCard, EmergencyCard, EmptyNotice } from '../components/Cards.jsx';
 import { RESOURCES } from '../data/resources.js';
 import { EDITORIAL, EDITORIAL_REVIEWED_AT } from '../data/editorial.js';
+import { WorkRightsGuide } from '../components/WorkRightsGuide.jsx';
 
 const DEAM_SERVICE = 'Delegacia Especializada de Atendimento à Mulher (DEAM)';
 const POLICE_SERVICE = 'Delegacia de polícia';
@@ -162,6 +163,7 @@ export default function TopicPage({ section, topic, searchService = '' }) {
   let body;
   if (r === 'EMERGENCY') body = <EmergencyCard />;
   else if (r === 'MAP') body = <LocalServiceSearch key={searchService} requestedService={searchService} />;
+  else if (topic.id === 'trabalho' && ['meus-direitos', 'preciso-de-ajuda'].includes(section.id)) body = <WorkRightsGuide />;
   else if (r === 'GROUPED') {
     const ids = Object.keys(RESOURCES).filter((id) => RESOURCES[id].kind !== 'tel');
     const groups = [...new Set(ids.map((id) => RESOURCES[id].group))];

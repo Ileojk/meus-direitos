@@ -20,6 +20,7 @@ export const SECTIONS = [
   { id: 'preciso-de-ajuda', label: 'Preciso de ajuda', icon: '🤝', desc: 'Veja opções para a situação que você está enfrentando.', heading: 'Qual situação você está enfrentando?', sub: 'Escolha a situação mais parecida com a sua para ver canais e serviços que podem ajudar.',
     topics: [
       t('violencia', 'Fui vítima de violência', '🛟', 'Canais de apoio e proteção.', ['tel190', 'd180-tel', 'd100-tel', 'sjdh-pe', 'pc-pe', 'bo-pe']),
+      t('trabalho', 'Tive um problema no trabalho', '💼', 'Salário, demissão, registro, férias ou assédio.', []),
       t('discriminacao', 'Sofri discriminação', '🫂', 'Onde relatar e buscar apoio.', ['d100-tel', 'd100-wa', 'mdh-ondh', 'bo-pe']),
       t('direito-negado', 'Meu direito foi negado', '🚪', 'Caminhos quando algo é negado.', ['d100-tel', 'mdh-ondh']),
       t('problema-empresa', 'Tive problema com empresa', '🏢', 'Orientações sobre problemas com empresas.'),
