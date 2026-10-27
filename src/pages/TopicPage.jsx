@@ -3,6 +3,7 @@ import { Breadcrumb, BackHome } from '../components/Layout.jsx';
 import { SectionHeader, ExternalLinkCard, EmergencyCard, EmptyNotice } from '../components/Cards.jsx';
 import { RESOURCES } from '../data/resources.js';
 import { EDITORIAL, EDITORIAL_REVIEWED_AT } from '../data/editorial.js';
+import { findNearbyPlaces } from '../utils/googlePlaces.js';
 
 function LocalServiceSearch() {
   const [service, setService] = useState('Delegacia Especializada de Atendimento à Mulher (DEAM)');
@@ -11,6 +12,8 @@ function LocalServiceSearch() {
   const [coordinates, setCoordinates] = useState(null);
   const [message, setMessage] = useState('');
   const [searchUrl, setSearchUrl] = useState('');
+  const [places, setPlaces] = useState([]);
+  const [isSearching, setIsSearching] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const locationRequest = useRef(0);
   const activeService = service === 'Outro serviço' ? otherService.trim() : service;
@@ -27,6 +30,7 @@ function LocalServiceSearch() {
   function cancelLocationRequest() {
     locationRequest.current += 1;
     setIsLocating(false);
+    setIsSearching(false);
   }
 
   function submit(event) {
@@ -41,8 +45,33 @@ function LocalServiceSearch() {
       setSearchUrl('');
       return;
     }
-    setSearchUrl(makeMapsUrl(activeService, { coordinates, city: city.trim() }));
-    setMessage('Busca preparada. Confira os resultados e confirme o atendimento com o local antes de sair.');
+    searchPlaces({ serviceName: activeService, location: coordinates, city: city.trim() });
+  }
+
+  async function searchPlaces({ serviceName = activeService, location = coordinates, city: cityName = city.trim() } = {}) {
+    const requestId = ++locationRequest.current;
+    setPlaces([]);
+    setSearchUrl(makeMapsUrl(serviceName, { coordinates: location, city: cityName }));
+    setIsSearching(true);
+    setMessage('Buscando locais próximos…');
+    try {
+      const found = await findNearbyPlaces({ serviceName, location, city: cityName });
+      if (requestId !== locationRequest.current) return;
+      setPlaces(found);
+      setMessage(found.length
+        ? `O Google encontrou ${found.length} ${found.length === 1 ? 'resultado' : 'resultados'} nesta busca. A lista mostra até 10 locais; confirme endereço e atendimento antes de sair.`
+        : 'Nenhum local apareceu nesta busca. Tente outro termo, aumente a área no Google Maps ou pesquise por município.');
+    } catch (error) {
+      if (requestId !== locationRequest.current) return;
+      setPlaces([]);
+      if (error?.message === 'MISSING_API_KEY') {
+        setMessage('A busca detalhada ainda precisa de uma chave do Google Places. Por enquanto, abra os resultados no Google Maps.');
+      } else {
+        setMessage('Não foi possível consultar os locais agora. Você ainda pode abrir a busca no Google Maps.');
+      }
+    } finally {
+      if (requestId === locationRequest.current) setIsSearching(false);
+    }
   }
 
   function locate() {
@@ -52,6 +81,7 @@ function LocalServiceSearch() {
     }
     setCoordinates(null);
     setSearchUrl('');
+    setPlaces([]);
     if (!navigator.geolocation) {
       setMessage('Este navegador não oferece localização. Informe o município para pesquisar.');
       return;
@@ -67,8 +97,7 @@ function LocalServiceSearch() {
           setIsLocating(false);
           setCoordinates(currentCoordinates);
           setCity('');
-          setSearchUrl(makeMapsUrl(activeService, { coordinates: currentCoordinates }));
-          setMessage('Localização obtida. Abra os resultados e confirme o endereço e o atendimento antes de sair.');
+          searchPlaces({ serviceName: activeService, location: currentCoordinates, city: '' });
         },
         (error) => {
           if (requestId !== locationRequest.current) return;
@@ -95,10 +124,10 @@ function LocalServiceSearch() {
 
   return (
     <div className="local-search">
-      <p>Escolha o serviço e informe sua cidade. A busca abre no Google Maps, que pode mostrar locais próximos em Pernambuco.</p>
+      <p>Escolha um serviço e pesquise por município ou localização. Os resultados vêm do Google Places e podem não incluir todos os serviços públicos.</p>
       <form onSubmit={submit}>
         <label htmlFor="local-service">Qual serviço você procura?</label>
-        <select id="local-service" value={service} onChange={(event) => { cancelLocationRequest(); setService(event.target.value); setSearchUrl(''); setMessage(''); }}>
+        <select id="local-service" value={service} onChange={(event) => { cancelLocationRequest(); setService(event.target.value); setSearchUrl(''); setPlaces([]); setMessage(''); }}>
           <optgroup label="Proteção e segurança">
             <option value="Delegacia Especializada de Atendimento à Mulher (DEAM)">Delegacia Especializada de Atendimento à Mulher (DEAM)</option>
             <option value="Delegacia de polícia">Delegacia de polícia</option>
@@ -129,18 +158,18 @@ function LocalServiceSearch() {
         {service === 'Outro serviço' && (
           <>
             <label htmlFor="other-local-service">Escreva o nome do serviço</label>
-            <input id="other-local-service" value={otherService} onChange={(event) => { cancelLocationRequest(); setOtherService(event.target.value); setSearchUrl(''); setMessage(''); }} placeholder="Ex.: Centro de Referência em Direitos Humanos" />
+            <input id="other-local-service" value={otherService} onChange={(event) => { cancelLocationRequest(); setOtherService(event.target.value); setSearchUrl(''); setPlaces([]); setMessage(''); }} placeholder="Ex.: Centro de Referência em Direitos Humanos" />
           </>
         )}
         <label htmlFor="local-city">Município de Pernambuco</label>
-        <input id="local-city" value={city} onChange={(event) => { cancelLocationRequest(); setCity(event.target.value); setCoordinates(null); setSearchUrl(''); setMessage(''); }} placeholder="Ex.: Caruaru, Petrolina ou Recife" />
+        <input id="local-city" value={city} onChange={(event) => { cancelLocationRequest(); setCity(event.target.value); setCoordinates(null); setSearchUrl(''); setPlaces([]); setMessage(''); }} placeholder="Ex.: Caruaru, Petrolina ou Recife" />
         <div className="local-search-actions">
           <button className="btn" type="button" onClick={locate} disabled={isLocating} aria-busy={isLocating}>{isLocating ? 'Obtendo localização…' : 'Usar minha localização atual'}</button>
-          <button className="btn btn-yellow" type="submit" disabled={isLocating}>Buscar serviço</button>
+          <button className="btn btn-yellow" type="submit" disabled={isLocating || isSearching}>{isSearching ? 'Buscando locais…' : 'Buscar serviço'}</button>
         </div>
         {coordinates && <p className="location-state">Localização aproximada pronta para esta busca.</p>}
       </form>
-      <p className="local-search-note">Sua localização não é salva por este site. Só será compartilhada com o Google Maps quando você abrir os resultados. A disponibilidade e a distância dos serviços precisam ser confirmadas diretamente.</p>
+      <p className="local-search-note">Sua localização é enviada ao Google para fazer esta busca e não é salva pelo site. A distância exibida é aproximada em linha reta. Confirme endereço, horário e atendimento antes de sair.</p>
       {womenPoliceSearch && (
         <div className="official-local-source" role="note">
           <strong>Vai procurar uma Delegacia da Mulher?</strong>
@@ -148,9 +177,24 @@ function LocalServiceSearch() {
         </div>
       )}
       <p className="local-search-status" role="status" aria-live="polite">{message}</p>
+      {places.length > 0 && <section className="nearby-results" aria-label="Locais encontrados">
+        <h2>{places.length} {places.length === 1 ? 'local encontrado' : 'locais encontrados'} <span>Dados de locais: Google</span></h2>
+        <ol>{places.map((place, index) => <li key={place.id || place.googleMapsURI || `${place.name}-${index}`}>
+          <div><strong>{place.name}</strong>
+            {place.distanceMeters != null && <span className="nearby-distance">{formatDistance(place.distanceMeters)} de você</span>}
+            <p>{place.address || 'Endereço não informado pelo Google.'}</p>
+          </div>
+          <a href={place.googleMapsURI || makeMapsUrl(place.name, { coordinates, city: city.trim() })} target="_blank" rel="noopener noreferrer">Ver no Google Maps<span className="sr-only"> (abre em nova aba)</span></a>
+        </li>)}</ol>
+      </section>}
       {searchUrl && <a className="btn map-results" href={searchUrl} target="_blank" rel="noopener noreferrer">Abrir resultados no Google Maps<span className="sr-only"> (abre em nova aba)</span></a>}
     </div>
   );
+}
+
+function formatDistance(meters) {
+  if (meters < 1000) return `${Math.round(meters)} m`;
+  return `${(meters / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} km`;
 }
 
 export default function TopicPage({ section, topic }) {
