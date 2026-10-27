@@ -5,15 +5,18 @@ import { RESOURCES } from '../data/resources.js';
 import { EDITORIAL, EDITORIAL_REVIEWED_AT } from '../data/editorial.js';
 
 function LocalServiceSearch() {
-  const [service, setService] = useState('delegacia da mulher');
+  const [service, setService] = useState('Delegacia Especializada de Atendimento à Mulher (DEAM)');
+  const [otherService, setOtherService] = useState('');
   const [city, setCity] = useState('');
   const [coordinates, setCoordinates] = useState(null);
   const [message, setMessage] = useState('');
   const [searchUrl, setSearchUrl] = useState('');
+  const activeService = service === 'Outro serviço' ? otherService.trim() : service;
+  const womenPoliceSearch = /mulher|delegacia/i.test(activeService);
 
   function submit(event) {
     event.preventDefault();
-    if (!service.trim()) {
+    if (!activeService) {
       setMessage('Escreva qual serviço você procura.');
       setSearchUrl('');
       return;
@@ -24,8 +27,8 @@ function LocalServiceSearch() {
       return;
     }
     const query = coordinates
-      ? `${service.trim()} perto de ${coordinates.latitude},${coordinates.longitude}, Pernambuco`
-      : `${service.trim()}, ${city.trim()}, Pernambuco, Brasil`;
+      ? `${activeService} perto de ${coordinates.latitude},${coordinates.longitude}, Pernambuco`
+      : `${activeService}, ${city.trim()}, Pernambuco, Brasil`;
     setSearchUrl(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`);
     setMessage('Busca preparada. Confira os resultados e confirme o atendimento com o local antes de sair.');
   }
@@ -55,15 +58,40 @@ function LocalServiceSearch() {
       <p>Escolha o serviço e informe sua cidade. A busca abre no Google Maps, que pode mostrar locais próximos em Pernambuco.</p>
       <form onSubmit={submit}>
         <label htmlFor="local-service">Qual serviço você procura?</label>
-        <input id="local-service" list="local-service-options" value={service} onChange={(event) => { setService(event.target.value); setSearchUrl(''); }} placeholder="Ex.: delegacia da mulher, CRAS, Defensoria Pública" />
-        <datalist id="local-service-options">
-          <option value="Delegacia da mulher" />
-          <option value="Delegacia de polícia" />
-          <option value="CRAS" />
-          <option value="Defensoria Pública" />
-          <option value="Conselho tutelar" />
-          <option value="Unidade de saúde" />
-        </datalist>
+        <select id="local-service" value={service} onChange={(event) => { setService(event.target.value); setSearchUrl(''); setMessage(''); }}>
+          <optgroup label="Proteção e segurança">
+            <option value="Delegacia Especializada de Atendimento à Mulher (DEAM)">Delegacia Especializada de Atendimento à Mulher (DEAM)</option>
+            <option value="Delegacia de polícia">Delegacia de polícia</option>
+            <option value="Conselho Tutelar">Conselho Tutelar</option>
+            <option value="Centro de Referência de Atendimento à Mulher">Centro de Referência de Atendimento à Mulher</option>
+          </optgroup>
+          <optgroup label="Assistência social">
+            <option value="Centro de Referência de Assistência Social (CRAS)">Centro de Referência de Assistência Social (CRAS)</option>
+            <option value="Centro de Referência Especializado de Assistência Social (CREAS)">Centro de Referência Especializado de Assistência Social (CREAS)</option>
+            <option value="Atendimento do Cadastro Único (CadÚnico)">Atendimento do Cadastro Único (CadÚnico)</option>
+          </optgroup>
+          <optgroup label="Orientação jurídica">
+            <option value="Defensoria Pública de Pernambuco">Defensoria Pública de Pernambuco</option>
+            <option value="Defensoria Pública da União (DPU)">Defensoria Pública da União (DPU)</option>
+          </optgroup>
+          <optgroup label="Saúde">
+            <option value="Unidade Básica de Saúde (UBS)">Unidade Básica de Saúde (UBS)</option>
+            <option value="Unidade de Pronto Atendimento (UPA)">Unidade de Pronto Atendimento (UPA)</option>
+            <option value="Hospital público">Hospital público</option>
+            <option value="Centro de Atenção Psicossocial (CAPS)">Centro de Atenção Psicossocial (CAPS)</option>
+          </optgroup>
+          <optgroup label="Trabalho e consumidor">
+            <option value="Agência do Trabalho (SINE)">Agência do Trabalho (SINE)</option>
+            <option value="Procon">Procon</option>
+          </optgroup>
+          <option value="Outro serviço">Outro serviço…</option>
+        </select>
+        {service === 'Outro serviço' && (
+          <>
+            <label htmlFor="other-local-service">Escreva o nome do serviço</label>
+            <input id="other-local-service" value={otherService} onChange={(event) => { setOtherService(event.target.value); setSearchUrl(''); }} placeholder="Ex.: Centro de Referência em Direitos Humanos" />
+          </>
+        )}
         <label htmlFor="local-city">Município de Pernambuco</label>
         <input id="local-city" value={city} onChange={(event) => { setCity(event.target.value); setCoordinates(null); setSearchUrl(''); }} placeholder="Ex.: Caruaru, Petrolina ou Recife" />
         <div className="local-search-actions">
@@ -73,6 +101,12 @@ function LocalServiceSearch() {
         {coordinates && <p className="location-state">Localização aproximada pronta para esta busca.</p>}
       </form>
       <p className="local-search-note">Sua localização não é salva por este site. Só será compartilhada com o Google Maps quando você abrir os resultados. A disponibilidade e a distância dos serviços precisam ser confirmadas diretamente.</p>
+      {womenPoliceSearch && (
+        <div className="official-local-source" role="note">
+          <strong>Vai procurar uma Delegacia da Mulher?</strong>
+          <p>O Google Maps pode mostrar endereço antigo. Confira também a <a href={RESOURCES['deams-pe-directory'].url} target="_blank" rel="noopener noreferrer">lista de endereços e telefones do MPPE</a>. Se não houver unidade especializada no município, a orientação do MPPE é procurar uma delegacia comum próxima.</p>
+        </div>
+      )}
       <p className="local-search-status" role="status" aria-live="polite">{message}</p>
       {searchUrl && <a className="btn map-results" href={searchUrl} target="_blank" rel="noopener noreferrer">Abrir resultados no Google Maps<span className="sr-only"> (abre em nova aba)</span></a>}
     </div>

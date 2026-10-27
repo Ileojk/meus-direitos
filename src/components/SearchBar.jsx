@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 export default function SearchBar({ initial = '', large = false }) {
   const [q, setQ] = useState(initial);
+  useEffect(() => setQ(initial), [initial]);
   const go = (e) => {
     e.preventDefault();
     const query = q.trim();

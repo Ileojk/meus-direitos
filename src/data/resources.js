@@ -42,6 +42,7 @@ export const RESOURCES = {
 
   'd180-tel': { title: 'Disque 180 — Central de Atendimento à Mulher', number: '180', desc: 'Ligue para o 180.', url: 'tel:180', kind: 'tel', group: 'Violência contra a mulher', tags: 'disque 180 mulher violência telefone' },
   'sjdh-pe': { title: 'Secretaria de Justiça, Direitos Humanos e Prevenção à Violência de Pernambuco', desc: 'Site do órgão estadual.', url: 'https://sjdh.pe.gov.br/', kind: 'site', group: 'Violência contra a mulher', tags: 'pernambuco justiça direitos humanos violência mulher' },
+  'deams-pe-directory': { title: 'Delegacias da Mulher em Pernambuco — endereços e telefones', desc: 'Relação estadual de Delegacias Especializadas no Atendimento à Mulher. A página orienta procurar uma delegacia comum próxima quando não houver unidade especializada no município.', url: 'https://portal.mppe.mp.br/ouvidoria-da-mulher', kind: 'site', group: 'Violência contra a mulher', tags: 'delegacia delegacia da mulher deam atendimento mulher endereço telefone pernambuco' },
 
   'comunica-pf': { title: 'COMUNICA PF — Comunicação de Crimes', desc: 'Canal da Polícia Federal para comunicar crimes.', url: 'https://www.gov.br/pf/pt-br/canais_atendimento/comunicacao-de-crimes', kind: 'site', group: 'Polícia', tags: 'polícia federal crime denúncia golpe' },
   'pc-pe': { title: 'Polícia Civil de Pernambuco', desc: 'Site oficial.', url: 'https://www2.pc.pe.gov.br/', kind: 'site', group: 'Polícia', tags: 'polícia civil pernambuco delegacia crime golpe' },

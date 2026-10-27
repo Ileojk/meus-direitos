@@ -3,7 +3,7 @@
 Hub digital de cidadania (protótipo). React + Vite, sem backend.
 
 ## Escopo territorial
-O projeto é voltado a Pernambuco, incluindo seus municípios. Fontes federais aparecem quando se aplicam ao assunto. A busca por locais consulta o Google Maps com o serviço e a cidade informados pela pessoa (ou sua localização aproximada, com autorização do navegador); o site não mantém uma base própria de endereços e não garante que todos os resultados estejam abertos, corretos ou prestem aquele atendimento. Antes de se deslocar, confirme endereço, horário, requisitos e disponibilidade diretamente com o serviço.
+O projeto é voltado a Pernambuco, incluindo seus municípios. Fontes federais aparecem quando se aplicam ao assunto. A busca por locais consulta o Google Maps com o serviço e a cidade informados pela pessoa (ou sua localização aproximada, com autorização do navegador); o site não mantém uma base própria de endereços e não garante que todos os resultados estejam abertos, corretos ou prestem aquele atendimento. Para Delegacias da Mulher, a ferramenta também aponta a lista do MPPE, pois resultados do mapa podem mostrar endereço antigo. Antes de se deslocar, confirme endereço, horário, requisitos e disponibilidade diretamente com o serviço.
 
 ## Executar
 ```bash
