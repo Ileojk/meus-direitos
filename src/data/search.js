@@ -60,6 +60,9 @@ const SYNONYMS = {
   roubaram: ['golpe', 'fraude', 'pix', 'crime'],
   invadiram: ['golpe', 'fraude', 'crime'],
   violencia: ['doméstica', 'agressão', 'ameaça'],
+  delegacia: ['polícia', 'delegacia da mulher', 'perto', 'localização'],
+  cras: ['perto', 'endereço', 'localização', 'assistência social'],
+  perto: ['localização', 'mapa', 'endereço'],
 };
 
 const ROUTE_KEYWORDS = {
@@ -73,7 +76,7 @@ const ROUTE_KEYWORDS = {
   'servicos-publicos/beneficios': 'bpc bolsa família cadastro único idoso benefício assistência social baixa renda pobreza pessoa deficiência',
   'encontre-um-local/atendimento-juridico': 'advogado advogada defensoria gratuita assistência jurídica',
   'encontre-um-local/ongs': 'ong organização organização social associação instituto',
-  'encontre-um-local/mapa': 'local endereço perto próximo localização mapa atendimento',
+  'encontre-um-local/mapa': 'local endereço perto próximo localização mapa atendimento delegacia da mulher cras defensoria pública hospital município pernambuco',
   'denuncias/violencia': 'doméstica agressão ameaça proteção mulher disque ligue',
   'denuncias/crimes': 'crime roubo furto assalto polícia disque denúncia registro boletim',
   'preciso-de-ajuda/violencia': 'doméstica agressão ameaça proteção mulher disque ligue',
@@ -111,7 +114,6 @@ const wordForms = (word) => {
 function createRecords() {
   const records = [];
   for (const section of SECTIONS) {
-    const topicContext = section.topics.map((topic) => `${topic.title} ${topic.desc}`).join(' ');
     records.push({
       type: 'section',
       id: section.id,
@@ -121,7 +123,9 @@ function createRecords() {
       icon: section.icon,
       fields: {
         title: section.heading || section.label,
-        keywords: `${section.label} ${section.desc} ${topicContext}`,
+        // Áreas não herdam termos de todos os temas: isso evitava que buscas específicas
+        // como "advogado grátis" retornassem uma seção genérica como falso positivo.
+        keywords: `${section.label} ${section.desc}`,
         details: section.sub || '',
       },
     });

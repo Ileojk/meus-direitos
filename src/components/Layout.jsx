@@ -47,7 +47,7 @@ export function Footer() {
     <footer className="footer">
       <div className="container">
         <Logo />
-        <p>Este site reúne informação geral e links para fontes oficiais e instituições. Ele não substitui orientação jurídica individual nem o atendimento do serviço. Em emergência policial, ligue 190.</p>
+        <p>Projeto voltado a Pernambuco e seus municípios. Reúne informação geral e links para fontes oficiais; confirme endereço, horário e atendimento diretamente com o serviço. Não substitui orientação jurídica individual. Em emergência policial, ligue 190.</p>
         <nav aria-label="Rodapé" className="footer-nav">
           {SECTIONS.map((s) => <a key={s.id} href={`#/${s.id}`}>{s.label}</a>)}
         </nav>

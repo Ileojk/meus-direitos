@@ -85,11 +85,23 @@ main:focus{outline:none}
 .editorial-note{color:var(--muted)}
 .source-date{font-size:.9rem;color:var(--muted)}
 .map-ph{min-height:320px;display:grid;place-content:center;text-align:center;background:#eef5f5}
+.local-search{max-width:760px;padding:clamp(1.25rem,4vw,2rem);background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:0 4px 18px rgba(22,74,91,.045)}
+.local-search>p:first-child{margin-top:0;color:var(--muted)}
+.local-search form{display:grid;gap:.6rem}
+.local-search label{margin-top:.5rem;font-weight:700;color:var(--petrol)}
+.local-search input{width:100%;min-height:52px;padding:.7rem .9rem;border:1px solid #aebcbe;border-radius:10px;background:#fff;color:var(--text);font:inherit}
+.local-search input:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.local-search-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.7rem}
+.local-search-note,.location-state,.local-search-status{font-size:.94rem;color:var(--muted)}
+.local-search-note{margin:1rem 0 0}
+.local-search-status{min-height:1.5em;margin:.5rem 0}
+.map-results{margin-top:.5rem}
+.territory-note{padding:.8rem 1rem;background:#eef5f5;border-radius:10px;color:var(--petrol)}
 .crumbs ol{display:flex;flex-wrap:wrap;list-style:none;margin:1rem 0 0;padding:0;font-size:.95rem}
 .crumbs li+li::before{content:"›";margin:0 .5rem;color:var(--muted)}
 .crumbs [aria-current]{color:var(--muted)}
 .footer{margin-top:3rem;padding:2rem 0;background:#fff;border-top:1px solid var(--line);color:var(--muted);font-size:.95rem}
 .footer p{max-width:70ch}
 .footer-nav{display:flex;flex-wrap:wrap;gap:.25rem 1.25rem}
-@media (max-width:600px){body{font-size:1.05rem}.search{flex-direction:column}.search .btn{min-height:56px}.grid{grid-template-columns:1fr}.hero h1{max-width:18ch}.hero{padding:2.75rem 0 3rem}.home-section-heading{margin-top:2rem}}
+@media (max-width:600px){body{font-size:1.05rem}.search{flex-direction:column}.search .btn{min-height:56px}.grid{grid-template-columns:1fr}.hero h1{max-width:18ch}.hero{padding:2.75rem 0 3rem}.home-section-heading{margin-top:2rem}.local-search{padding:1.1rem}.local-search-actions{flex-direction:column}.local-search-actions .btn,.map-results{width:100%;min-height:52px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}

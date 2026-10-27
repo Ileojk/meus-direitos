@@ -10,9 +10,9 @@ export default function Home() {
     <>
       <section className="hero">
         <div className="container">
-          <p className="hero-kicker">Informação pública para o dia a dia</p>
+          <p className="hero-kicker">Direitos e serviços em Pernambuco</p>
           <h1>Entenda seus direitos e descubra onde buscar ajuda</h1>
-          <p className="lead">Escolha um assunto ou conte o que aconteceu. Encontre informações e fontes para pensar no próximo passo.</p>
+          <p className="lead">Escolha um assunto ou conte o que aconteceu. Encontre informações e caminhos de atendimento nos municípios pernambucanos.</p>
           <SearchBar large />
         </div>
       </section>
