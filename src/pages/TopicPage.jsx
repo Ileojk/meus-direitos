@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Breadcrumb, BackHome } from '../components/Layout.jsx';
 import { SectionHeader, ExternalLinkCard, EmergencyCard, EmptyNotice } from '../components/Cards.jsx';
 import { RESOURCES } from '../data/resources.js';
@@ -11,8 +11,23 @@ function LocalServiceSearch() {
   const [coordinates, setCoordinates] = useState(null);
   const [message, setMessage] = useState('');
   const [searchUrl, setSearchUrl] = useState('');
+  const [isLocating, setIsLocating] = useState(false);
+  const locationRequest = useRef(0);
   const activeService = service === 'Outro serviço' ? otherService.trim() : service;
   const womenPoliceSearch = /mulher|delegacia/i.test(activeService);
+
+  function makeMapsUrl(serviceName, location) {
+    const query = location.coordinates
+      ? `${serviceName} perto de ${location.coordinates.latitude},${location.coordinates.longitude}`
+      : `${serviceName}, ${location.city}, Pernambuco, Brasil`;
+    const params = new URLSearchParams({ api: '1', query });
+    return `https://www.google.com/maps/search/?${params.toString()}`;
+  }
+
+  function cancelLocationRequest() {
+    locationRequest.current += 1;
+    setIsLocating(false);
+  }
 
   function submit(event) {
     event.preventDefault();
@@ -26,31 +41,56 @@ function LocalServiceSearch() {
       setSearchUrl('');
       return;
     }
-    const query = coordinates
-      ? `${activeService} perto de ${coordinates.latitude},${coordinates.longitude}, Pernambuco`
-      : `${activeService}, ${city.trim()}, Pernambuco, Brasil`;
-    setSearchUrl(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`);
+    setSearchUrl(makeMapsUrl(activeService, { coordinates, city: city.trim() }));
     setMessage('Busca preparada. Confira os resultados e confirme o atendimento com o local antes de sair.');
   }
 
   function locate() {
-    setMessage('');
+    if (!activeService) {
+      setMessage('Escreva qual serviço você procura antes de usar sua localização.');
+      return;
+    }
     setCoordinates(null);
     setSearchUrl('');
     if (!navigator.geolocation) {
       setMessage('Este navegador não oferece localização. Informe o município para pesquisar.');
       return;
     }
-    navigator.geolocation.getCurrentPosition(
-      ({ coords }) => {
-        setCoordinates({ latitude: coords.latitude, longitude: coords.longitude });
-        setCity('');
-        setSearchUrl('');
-        setMessage('Localização aproximada obtida neste dispositivo. Ela só será enviada ao Google Maps se você abrir a busca.');
-      },
-      () => setMessage('Não foi possível obter sua localização. Você pode informar o município manualmente.'),
-      { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 },
-    );
+    const requestId = ++locationRequest.current;
+    setIsLocating(true);
+    setMessage('Obtendo localização aproximada. Autorize o acesso no aviso do navegador, se solicitado.');
+    try {
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => {
+          if (requestId !== locationRequest.current) return;
+          const currentCoordinates = { latitude: coords.latitude, longitude: coords.longitude };
+          setIsLocating(false);
+          setCoordinates(currentCoordinates);
+          setCity('');
+          setSearchUrl(makeMapsUrl(activeService, { coordinates: currentCoordinates }));
+          setMessage('Localização obtida. Abra os resultados e confirme o endereço e o atendimento antes de sair.');
+        },
+        (error) => {
+          if (requestId !== locationRequest.current) return;
+          setIsLocating(false);
+          if (error.code === 1) {
+            setMessage('A localização foi bloqueada. Libere a permissão deste site nas configurações do navegador ou informe o município.');
+          } else if (error.code === 2) {
+            setMessage('O dispositivo não conseguiu determinar a localização. Tente novamente ou informe o município.');
+          } else if (error.code === 3) {
+            setMessage('A localização demorou mais que o esperado. Verifique se o serviço de localização do dispositivo está ativo ou informe o município.');
+          } else {
+            setMessage('Não foi possível obter sua localização. Tente novamente ou informe o município.');
+          }
+        },
+        { enableHighAccuracy: true, timeout: 30000, maximumAge: 60000 },
+      );
+    } catch {
+      if (requestId === locationRequest.current) {
+        setIsLocating(false);
+        setMessage('Este navegador não conseguiu iniciar a localização. Informe o município para pesquisar.');
+      }
+    }
   }
 
   return (
@@ -58,7 +98,7 @@ function LocalServiceSearch() {
       <p>Escolha o serviço e informe sua cidade. A busca abre no Google Maps, que pode mostrar locais próximos em Pernambuco.</p>
       <form onSubmit={submit}>
         <label htmlFor="local-service">Qual serviço você procura?</label>
-        <select id="local-service" value={service} onChange={(event) => { setService(event.target.value); setSearchUrl(''); setMessage(''); }}>
+        <select id="local-service" value={service} onChange={(event) => { cancelLocationRequest(); setService(event.target.value); setSearchUrl(''); setMessage(''); }}>
           <optgroup label="Proteção e segurança">
             <option value="Delegacia Especializada de Atendimento à Mulher (DEAM)">Delegacia Especializada de Atendimento à Mulher (DEAM)</option>
             <option value="Delegacia de polícia">Delegacia de polícia</option>
@@ -89,14 +129,14 @@ function LocalServiceSearch() {
         {service === 'Outro serviço' && (
           <>
             <label htmlFor="other-local-service">Escreva o nome do serviço</label>
-            <input id="other-local-service" value={otherService} onChange={(event) => { setOtherService(event.target.value); setSearchUrl(''); }} placeholder="Ex.: Centro de Referência em Direitos Humanos" />
+            <input id="other-local-service" value={otherService} onChange={(event) => { cancelLocationRequest(); setOtherService(event.target.value); setSearchUrl(''); setMessage(''); }} placeholder="Ex.: Centro de Referência em Direitos Humanos" />
           </>
         )}
         <label htmlFor="local-city">Município de Pernambuco</label>
-        <input id="local-city" value={city} onChange={(event) => { setCity(event.target.value); setCoordinates(null); setSearchUrl(''); }} placeholder="Ex.: Caruaru, Petrolina ou Recife" />
+        <input id="local-city" value={city} onChange={(event) => { cancelLocationRequest(); setCity(event.target.value); setCoordinates(null); setSearchUrl(''); setMessage(''); }} placeholder="Ex.: Caruaru, Petrolina ou Recife" />
         <div className="local-search-actions">
-          <button className="btn" type="button" onClick={locate}>Usar minha localização aproximada</button>
-          <button className="btn btn-yellow" type="submit">Buscar serviço</button>
+          <button className="btn" type="button" onClick={locate} disabled={isLocating} aria-busy={isLocating}>{isLocating ? 'Obtendo localização…' : 'Usar minha localização atual'}</button>
+          <button className="btn btn-yellow" type="submit" disabled={isLocating}>Buscar serviço</button>
         </div>
         {coordinates && <p className="location-state">Localização aproximada pronta para esta busca.</p>}
       </form>
