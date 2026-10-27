@@ -81,8 +81,8 @@ function LocalServiceSearch() {
             <option value="Centro de Atenção Psicossocial (CAPS)">Centro de Atenção Psicossocial (CAPS)</option>
           </optgroup>
           <optgroup label="Trabalho e consumidor">
-            <option value="Agência do Trabalho (SINE)">Agência do Trabalho (SINE)</option>
-            <option value="Procon">Procon</option>
+            <option value="Agência do Trabalho — Sistema Nacional de Emprego (Sine)">Agência do Trabalho — Sistema Nacional de Emprego (Sine)</option>
+            <option value="Programa de Proteção e Defesa do Consumidor (Procon)">Programa de Proteção e Defesa do Consumidor (Procon)</option>
           </optgroup>
           <option value="Outro serviço">Outro serviço…</option>
         </select>

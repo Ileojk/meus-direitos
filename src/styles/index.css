@@ -89,8 +89,9 @@ main:focus{outline:none}
 .local-search>p:first-child{margin-top:0;color:var(--muted)}
 .local-search form{display:grid;gap:.6rem}
 .local-search label{margin-top:.5rem;font-weight:700;color:var(--petrol)}
-.local-search input{width:100%;min-height:52px;padding:.7rem .9rem;border:1px solid #aebcbe;border-radius:10px;background:#fff;color:var(--text);font:inherit}
-.local-search input:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
+.local-search input,.local-search select{width:100%;min-height:52px;padding:.7rem .9rem;border:1px solid #aebcbe;border-radius:10px;background:#fff;color:var(--text);font:inherit}
+.local-search select{padding-right:2.5rem;cursor:pointer}
+.local-search input:focus-visible,.local-search select:focus-visible{outline:3px solid var(--teal);outline-offset:2px}
 .local-search-actions{display:flex;gap:.75rem;flex-wrap:wrap;margin-top:.7rem}
 .local-search-note,.location-state,.local-search-status{font-size:.94rem;color:var(--muted)}
 .local-search-note{margin:1rem 0 0}
