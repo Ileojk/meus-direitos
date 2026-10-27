@@ -1,28 +1,36 @@
+import { useState } from 'react';
 import SearchBar from '../components/SearchBar.jsx';
 import { Breadcrumb, BackHome } from '../components/Layout.jsx';
 import { CategoryCard, ExternalLinkCard, SectionHeader } from '../components/Cards.jsx';
-import { SECTIONS } from '../data/site.js';
-import { RESOURCES } from '../data/resources.js';
+import { searchSite } from '../data/search.js';
 
-const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-// Aceita plural/singular simples: compara pelo radical de cada palavra da busca
-const stem = (w) => w.replace(/(es|s)$/, '');
-const match = (text, q) => { const t = norm(text); return norm(q).split(/\s+/).filter(Boolean).every((w) => t.includes(w) || t.includes(stem(w))); };
+function ResultGroup({ title, items, renderItem, limit = 8 }) {
+  const [showAll, setShowAll] = useState(false);
+  const visibleItems = showAll ? items : items.slice(0, limit);
+
+  return (
+    <section className="search-results-group">
+      <h2 className="h2">{title} <span className="result-count">({items.length})</span></h2>
+      <div className="grid">{visibleItems.map(renderItem)}</div>
+      {items.length > limit && (
+        <button className="show-more" type="button" onClick={() => setShowAll(!showAll)}>
+          {showAll ? 'Mostrar menos' : `Ver todos os ${items.length} resultados`}
+        </button>
+      )}
+    </section>
+  );
+}
 
 export default function SearchPage({ q }) {
-  const topics = SECTIONS.flatMap((s) => s.topics.map((tp) => ({ s, tp })));
-  const secHits = SECTIONS.filter((s) => match(`${s.label} ${s.desc} ${s.heading}`, q));
-  const topicHits = topics.filter(({ s, tp }) => match(`${tp.title} ${tp.desc} ${s.label}`, q));
-  const resHits = Object.keys(RESOURCES).filter((id) => match(`${RESOURCES[id].title} ${RESOURCES[id].desc} ${RESOURCES[id].tags}`, q));
-  const total = secHits.length + topicHits.length + resHits.length;
+  const { sections, topics, resources, total } = searchSite(q);
   return (
     <div className="container page">
       <Breadcrumb items={[{ label: 'Busca' }]} />
-      <SectionHeader title="Busca" sub={q ? `${total} resultado(s) para “${q}”` : 'Digite o que você precisa.'}><SearchBar initial={q} /></SectionHeader>
-      {q && total === 0 && <div className="notice" role="status"><strong>Nada encontrado.</strong><p>Tente outra palavra ou navegue pelas áreas do menu.</p></div>}
-      {secHits.length > 0 && <><h2 className="h2">Áreas</h2><div className="grid">{secHits.map((s) => <CategoryCard key={s.id} href={`#/${s.id}`} icon={s.icon} title={s.label} desc={s.desc} />)}</div></>}
-      {topicHits.length > 0 && <><h2 className="h2">Temas</h2><div className="grid">{topicHits.map(({ s, tp }) => <CategoryCard key={s.id + tp.id} href={`#/${s.id}/${tp.id}`} icon={tp.icon} title={tp.title} desc={`${s.label} · ${tp.desc}`} />)}</div></>}
-      {resHits.length > 0 && <><h2 className="h2">Instituições e canais</h2><div className="grid">{resHits.map((id) => <ExternalLinkCard key={id} id={id} />)}</div></>}
+      <SectionHeader title="Pesquisa" sub={q ? `${total} resultado${total === 1 ? '' : 's'} para “${q}”` : 'Pesquise por um assunto ou descreva sua situação.'}><SearchBar initial={q} /></SectionHeader>
+      {q && total === 0 && <div className="notice" role="status"><strong>Não encontrei resultados para essa busca.</strong><p>Tente palavras mais curtas, como aluguel, escola, golpe, emprego ou saúde.</p></div>}
+      {sections.length > 0 && <ResultGroup key={`${q}-areas`} title="Áreas" items={sections} limit={6} renderItem={(section) => <CategoryCard key={section.id} href={section.href} icon={section.icon} title={section.title} desc={section.subtitle} />} />}
+      {topics.length > 0 && <ResultGroup key={`${q}-temas`} title="Páginas e temas" items={topics} renderItem={(topic) => <CategoryCard key={topic.id} href={topic.href} icon={topic.icon} title={topic.title} desc={topic.subtitle} />} />}
+      {resources.length > 0 && <ResultGroup key={`${q}-fontes`} title="Fontes e serviços" items={resources} renderItem={(resource) => <ExternalLinkCard key={resource.id} id={resource.id} />} />}
       <div className="actions"><BackHome /></div>
     </div>
   );

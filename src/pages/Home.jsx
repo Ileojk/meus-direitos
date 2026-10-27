@@ -14,7 +14,6 @@ export default function Home() {
           <h1>Entenda seus direitos e descubra onde buscar ajuda</h1>
           <p className="lead">Escolha um assunto ou conte o que aconteceu. Encontre informações e fontes para pensar no próximo passo.</p>
           <SearchBar large />
-          <p className="hint">Pesquise, por exemplo: <a href="#/busca?q=viol%C3%AAncia">violência</a>, <a href="#/busca?q=golpe">golpe</a>, <a href="#/busca?q=trabalho">trabalho</a> ou <a href="#/busca?q=sa%C3%BAde">saúde</a>.</p>
         </div>
       </section>
       <div className="container">

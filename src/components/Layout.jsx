@@ -17,7 +17,11 @@ export function Logo({ compact = false }) {
 
 export function Header({ current }) {
   const [open, setOpen] = useState(false);
-  const links = [{ id: '', label: 'Início', href: '#/' }, ...SECTIONS.map((s) => ({ id: s.id, label: s.label, href: `#/${s.id}` }))];
+  const links = [
+    { id: '', label: 'Início', href: '#/' },
+    { id: 'busca', label: 'Pesquisar', href: '#/busca' },
+    ...SECTIONS.map((s) => ({ id: s.id, label: s.label, href: `#/${s.id}` })),
+  ];
   return (
     <header className="header">
       <div className="container header-in">

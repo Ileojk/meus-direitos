@@ -16,4 +16,5 @@ Requer Node.js 18+.
 - `src/data/resources.js`: todos os links e telefones.
 - `src/data/site.js`: seções e temas do site map.
 - `src/data/editorial.js`: textos de apoio, ressalvas territoriais e referências das páginas temáticas.
+- `src/data/search.js`: conteúdo indexado e sinônimos usados pela pesquisa.
 - Rotas por hash (`#/secao/tema`), então funciona sem configurar servidor.
