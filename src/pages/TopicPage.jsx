@@ -4,13 +4,17 @@ import { SectionHeader, ExternalLinkCard, EmergencyCard, EmptyNotice } from '../
 import { RESOURCES } from '../data/resources.js';
 import { EDITORIAL, EDITORIAL_REVIEWED_AT } from '../data/editorial.js';
 import { WorkRightsGuide } from '../components/WorkRightsGuide.jsx';
+import { EducationRightsGuide } from '../components/EducationRightsGuide.jsx';
+import { MeusDireitosGuide } from '../components/MeusDireitosGuide.jsx';
 
 const DEAM_SERVICE = 'Delegacia Especializada de Atendimento à Mulher (DEAM)';
 const POLICE_SERVICE = 'Delegacia de polícia';
+const KNOWN_MAP_SERVICES = [DEAM_SERVICE, POLICE_SERVICE, 'Conselho Tutelar', 'Centro de Referência de Assistência Social (CRAS)', 'Unidade Básica de Saúde (UBS)'];
 
 function LocalServiceSearch({ requestedService }) {
-  const [service, setService] = useState(requestedService === 'police' ? POLICE_SERVICE : DEAM_SERVICE);
-  const [otherService, setOtherService] = useState('');
+  const requestedName = requestedService === 'police' ? POLICE_SERVICE : requestedService === 'council' ? 'Conselho Tutelar' : requestedService === 'deam' ? DEAM_SERVICE : requestedService;
+  const [service, setService] = useState(!requestedName || KNOWN_MAP_SERVICES.includes(requestedName) ? (requestedName || DEAM_SERVICE) : 'Outro serviço');
+  const [otherService, setOtherService] = useState(KNOWN_MAP_SERVICES.includes(requestedName) ? '' : requestedName || '');
   const [city, setCity] = useState('');
   const [coordinates, setCoordinates] = useState(null);
   const [message, setMessage] = useState('');
@@ -164,6 +168,8 @@ export default function TopicPage({ section, topic, searchService = '' }) {
   if (r === 'EMERGENCY') body = <EmergencyCard />;
   else if (r === 'MAP') body = <LocalServiceSearch key={searchService} requestedService={searchService} />;
   else if (topic.id === 'trabalho' && ['meus-direitos', 'preciso-de-ajuda'].includes(section.id)) body = <WorkRightsGuide />;
+  else if (topic.id === 'educacao' && ['meus-direitos', 'preciso-de-ajuda'].includes(section.id)) body = <EducationRightsGuide />;
+  else if (section.id === 'meus-direitos' && topic.id !== 'trabalho' && topic.id !== 'educacao') body = <MeusDireitosGuide topicId={topic.id} />;
   else if (r === 'GROUPED') {
     const ids = Object.keys(RESOURCES).filter((id) => RESOURCES[id].kind !== 'tel');
     const groups = [...new Set(ids.map((id) => RESOURCES[id].group))];
