@@ -28,10 +28,10 @@ export const SECTIONS = [
     ] },
   { id: 'denuncias', label: 'Denúncias', icon: '📣', desc: 'Telefones e canais para denunciar.', heading: 'Denúncias', sub: 'Escolha o tipo de situação e veja por onde denunciar.', emergency: true,
     topics: [
-      t('violencia', 'Violência', '🛟', 'Denuncie situações de violência.', ['d180-tel', 'd100-tel', 'tel190', 'tel181', 'sjdh-pe']),
+      t('violencia', 'Violência', '🛟', 'Denuncie situações de violência.', ['d180-tel', 'd100-tel', 'tel190', 'sjdh-pe']),
       t('discriminacao', 'Discriminação', '🫂', 'Denuncie casos de discriminação.', ['d100-tel', 'd100-wa', 'mdh-ondh']),
       t('violacao-direitos', 'Violação de direitos', '🚫', 'Denuncie violações de direitos humanos.', ['d100-tel', 'd100-wa', 'mdh-ondh', 'd100-insta', 'd100-ufmg']),
-      t('crimes', 'Crimes', '🔎', 'Comunique crimes às autoridades.', ['comunica-pf', 'pc-pe', 'pf', 'bo-pe', 'conecta-recife', 'pf-canais', 'tel197', 'tel181']),
+      t('crimes', 'Crimes', '🔎', 'Comunique crimes às autoridades.', ['comunica-pf', 'pc-pe', 'pf', 'bo-pe', 'conecta-recife', 'pf-canais', 'tel181', 'pc-pr-181']),
       t('emergencias', 'Emergências', '🚨', 'Números para ligar agora.', 'EMERGENCY'),
     ] },
   { id: 'servicos-publicos', label: 'Serviços públicos', icon: '🏛️', desc: 'Encontre o serviço certo.', heading: 'Serviços públicos', sub: 'Veja os serviços por área. Novos serviços serão adicionados aqui.',

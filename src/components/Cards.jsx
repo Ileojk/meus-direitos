@@ -33,7 +33,8 @@ export function ExternalLinkCard({ id }) {
 export function EmergencyCard() {
   return (
     <section className="emergency" aria-labelledby="emerg-title">
-      <h2 id="emerg-title">Em caso de emergência</h2>
+      <h2 id="emerg-title">Emergência e canais de apoio</h2>
+      <p className="emergency-note">Em uma emergência policial, ligue 190. Os canais 100 e 180 tratam de situações específicas; em emergência de violência contra mulheres, o Ligue 180 orienta acionar o 190.</p>
       <ul>
         {EMERGENCY_IDS.map((id) => (
           <li key={id}>
