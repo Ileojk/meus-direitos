@@ -43,7 +43,7 @@ export function Footer() {
     <footer className="footer">
       <div className="container">
         <Logo />
-        <p>Protótipo de hub de cidadania. As informações são links para fontes oficiais e de instituições; confirme sempre nos canais oficiais. Em emergência, ligue 190.</p>
+        <p>Este site reúne informação geral e links para fontes oficiais e instituições. Ele não substitui orientação jurídica individual nem o atendimento do serviço. Em emergência policial, ligue 190.</p>
         <nav aria-label="Rodapé" className="footer-nav">
           {SECTIONS.map((s) => <a key={s.id} href={`#/${s.id}`}>{s.label}</a>)}
         </nav>

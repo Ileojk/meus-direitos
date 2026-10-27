@@ -17,7 +17,7 @@ export const SECTIONS = [
       t('pcd', 'Pessoas com deficiência', '♿', 'Direitos e inclusão.', ['d100-tel', 'mdh-ondh']),
       t('outros-grupos', 'Outros grupos', '🤲', 'Direitos de outros grupos.'),
     ] },
-  { id: 'preciso-de-ajuda', label: 'Preciso de ajuda', icon: '🤝', desc: 'Conte o que aconteceu e descubra o caminho.', heading: 'Conte o que aconteceu.', sub: 'Escolha a situação que mais se aproxima do que você está enfrentando.',
+  { id: 'preciso-de-ajuda', label: 'Preciso de ajuda', icon: '🤝', desc: 'Veja opções para a situação que você está enfrentando.', heading: 'Qual situação você está enfrentando?', sub: 'Escolha a situação mais parecida com a sua para ver canais e serviços que podem ajudar.',
     topics: [
       t('violencia', 'Fui vítima de violência', '🛟', 'Canais de apoio e proteção.', ['tel190', 'd180-tel', 'd100-tel', 'sjdh-pe', 'pc-pe', 'bo-pe']),
       t('discriminacao', 'Sofri discriminação', '🫂', 'Onde relatar e buscar apoio.', ['d100-tel', 'd100-wa', 'mdh-ondh', 'bo-pe']),
@@ -26,7 +26,7 @@ export const SECTIONS = [
       t('golpe', 'Sofri um golpe', '🎣', 'O que fazer depois de um golpe.', ['bo-pe', 'pc-pe', 'comunica-pf', 'conecta-recife']),
       t('orientacao-juridica', 'Preciso de orientação jurídica', '🧭', 'Onde buscar orientação.'),
     ] },
-  { id: 'denuncias', label: 'Denúncias', icon: '📣', desc: 'Telefones e canais para denunciar.', heading: 'Denúncias', sub: 'Escolha o tipo de situação e veja por onde denunciar.', emergency: true,
+  { id: 'denuncias', label: 'Denúncias', icon: '📣', desc: 'Encontre canais para relatar uma situação.', heading: 'Canais para denunciar', sub: 'Escolha o assunto e confira qual canal pode receber o relato. Em emergência policial, ligue 190.', emergency: true,
     topics: [
       t('violencia', 'Violência', '🛟', 'Denuncie situações de violência.', ['d180-tel', 'd100-tel', 'tel190', 'sjdh-pe']),
       t('discriminacao', 'Discriminação', '🫂', 'Denuncie casos de discriminação.', ['d100-tel', 'd100-wa', 'mdh-ondh']),
@@ -34,7 +34,7 @@ export const SECTIONS = [
       t('crimes', 'Crimes', '🔎', 'Comunique crimes às autoridades.', ['comunica-pf', 'pc-pe', 'pf', 'bo-pe', 'conecta-recife', 'pf-canais', 'tel181', 'pc-pr-181']),
       t('emergencias', 'Emergências', '🚨', 'Números para ligar agora.', 'EMERGENCY'),
     ] },
-  { id: 'servicos-publicos', label: 'Serviços públicos', icon: '🏛️', desc: 'Encontre o serviço certo.', heading: 'Serviços públicos', sub: 'Veja os serviços por área. Novos serviços serão adicionados aqui.',
+  { id: 'servicos-publicos', label: 'Serviços públicos', icon: '🏛️', desc: 'Acesse serviços oficiais por assunto.', heading: 'Serviços públicos', sub: 'Consulte serviços oficiais e confirme requisitos, disponibilidade e atendimento no órgão responsável.',
     topics: [
       t('saude', 'Saúde', '🩺', 'Serviços de saúde.'),
       t('assistencia-social', 'Assistência social', '🧡', 'Serviços de assistência social.'),
@@ -44,7 +44,7 @@ export const SECTIONS = [
       t('emprego', 'Emprego', '🧰', 'Serviços de emprego.'),
       t('beneficios', 'Benefícios', '🎁', 'Serviços de benefícios.'),
     ] },
-  { id: 'encontre-um-local', label: 'Encontre um local', icon: '📍', desc: 'Instituições e serviços para atendimento.', heading: 'Encontre um local', sub: 'Encontre instituições e serviços onde você pode buscar atendimento.',
+  { id: 'encontre-um-local', label: 'Encontre um local', icon: '📍', desc: 'Veja instituições e possibilidades de atendimento.', heading: 'Onde buscar atendimento?', sub: 'Confira as fontes disponíveis e confirme diretamente se a instituição atende sua região.',
     topics: [
       t('mapa', 'Mapa', '🗺️', 'Veja locais no mapa.', 'MAP'),
       t('orgaos-publicos', 'Órgãos públicos', '🏛️', 'Órgãos que oferecem atendimento.', ['pc-pe', 'pf', 'sjdh-pe']),
@@ -52,7 +52,7 @@ export const SECTIONS = [
       t('centros-atendimento', 'Centros de atendimento', '🏥', 'Centros de atendimento.', ['ct-recife']),
       t('atendimento-juridico', 'Atendimento jurídico', '📑', 'Onde buscar atendimento jurídico.'),
     ] },
-  { id: 'informacao', label: 'Informação', icon: '💡', desc: 'Sites, guias e explicações simples.', heading: 'Informação', sub: 'Conteúdo confiável para entender seus direitos.',
+  { id: 'informacao', label: 'Informação', icon: '💡', desc: 'Consulte guias, perguntas e referências.', heading: 'Entenda melhor seus direitos', sub: 'Consulte fontes e materiais de referência. As explicações do site são gerais e não substituem orientação individual.',
     topics: [
       t('sites-especializados', 'Sites especializados', '🌐', 'Sites e canais de instituições.', 'GROUPED'),
       t('guias', 'Guias', '🗂️', 'Guias para entender e agir.', ['govbr-cotidiano', 'ct-papel', 'ct-quando', 'd100-ufmg']),

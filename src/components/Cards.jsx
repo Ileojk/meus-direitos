@@ -4,7 +4,7 @@ export function SectionHeader({ title, sub, children }) {
   return <div className="section-header"><h1>{title}</h1>{sub && <p className="lead">{sub}</p>}{children}</div>;
 }
 
-export function CategoryCard({ href, icon, title, desc, cta = 'Saiba mais' }) {
+export function CategoryCard({ href, icon, title, desc, cta = 'Ver opções' }) {
   return (
     <a className="card" href={href}>
       <span className="icon" aria-hidden="true">{icon}</span>
