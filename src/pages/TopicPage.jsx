@@ -181,7 +181,7 @@ export default function TopicPage({ section, topic, searchService = '' }) {
   } else if (editorial) body = (
     <>
       <div className="editorial">
-        <p className="territory-note"><strong>Foco do projeto:</strong> Pernambuco, com orientação para os municípios do estado. Fontes federais também são incluídas quando se aplicam.</p>
+        <p className="editorial-context">Esta orientação considera os serviços disponíveis em Pernambuco. Quando a regra é nacional, também indicamos fontes federais; confirme os procedimentos no órgão responsável.</p>
         <p>{editorial.summary}</p>
         <p className="editorial-note">{editorial.note}</p>
         <p className="source-date">Referências revisadas em {new Date(`${EDITORIAL_REVIEWED_AT}T12:00:00`).toLocaleDateString('pt-BR')}. Confirme a informação atualizada no órgão responsável.</p>

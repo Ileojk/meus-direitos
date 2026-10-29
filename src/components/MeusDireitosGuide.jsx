@@ -103,7 +103,7 @@ export function MeusDireitosGuide({ topicId }) {
   return (
     <>
       <div className="editorial rights-guide-intro">
-        <p className="territory-note"><strong>Foco do projeto:</strong> Pernambuco. A disponibilidade e o canal de atendimento podem variar por município.</p>
+        <p className="editorial-context">As orientações consideram Pernambuco. A disponibilidade e os canais de atendimento podem variar por município.</p>
         <p>{guide.intro}</p>
         <p className="editorial-note">{guide.note}</p>
       </div>
