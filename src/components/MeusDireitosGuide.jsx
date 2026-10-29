@@ -1,5 +1,5 @@
 import { EDITORIAL_REVIEWED_AT } from '../data/editorial.js';
-import { ExternalLinkCard } from './Cards.jsx';
+import { ResourceLinkList } from './Cards.jsx';
 import { GuideActions, LawCitation } from './GuideEvidence.jsx';
 
 const GUIDES = {
@@ -123,9 +123,7 @@ export function MeusDireitosGuide({ topicId }) {
       </section>
       <section className="rights-references" aria-labelledby="rights-references-title">
         <h2 id="rights-references-title" className="h2">Fontes oficiais e canais</h2>
-        <div className="grid">
-          {guide.sources.map((id) => <ExternalLinkCard key={id} id={id} />)}
-        </div>
+        <ResourceLinkList ids={guide.sources} />
         <p className="source-date">Referências revisadas em {new Date(`${EDITORIAL_REVIEWED_AT}T12:00:00`).toLocaleDateString('pt-BR')}. Confirme regras, requisitos e atendimento diretamente na fonte.</p>
       </section>
     </>

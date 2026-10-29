@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Breadcrumb, BackHome } from '../components/Layout.jsx';
-import { SectionHeader, ExternalLinkCard, EmergencyCard, EmptyNotice } from '../components/Cards.jsx';
+import { SectionHeader, ResourceLinkList, EmergencyCard, EmptyNotice } from '../components/Cards.jsx';
 import { RESOURCES } from '../data/resources.js';
 import { EDITORIAL, EDITORIAL_REVIEWED_AT } from '../data/editorial.js';
 import { WorkRightsGuide } from '../components/WorkRightsGuide.jsx';
@@ -175,7 +175,7 @@ export default function TopicPage({ section, topic, searchService = '' }) {
     const groups = [...new Set(ids.map((id) => RESOURCES[id].group))];
     body = groups.map((g) => (
       <section key={g}><h2 className="h2">{g}</h2>
-        <div className="grid">{ids.filter((id) => RESOURCES[id].group === g).map((id) => <ExternalLinkCard key={id} id={id} />)}</div>
+        <ResourceLinkList ids={ids.filter((id) => RESOURCES[id].group === g)} />
       </section>
     ));
   } else if (editorial) body = (
@@ -186,7 +186,7 @@ export default function TopicPage({ section, topic, searchService = '' }) {
         <p className="editorial-note">{editorial.note}</p>
         <p className="source-date">Referências revisadas em {new Date(`${EDITORIAL_REVIEWED_AT}T12:00:00`).toLocaleDateString('pt-BR')}. Confirme a informação atualizada no órgão responsável.</p>
       </div>
-      <div className="grid">{editorial.sources.map((id) => <ExternalLinkCard key={id} id={id} />)}</div>
+      <ResourceLinkList ids={editorial.sources} />
     </>
   );
   else if (topic.id === 'outros-grupos') body = (
@@ -195,7 +195,7 @@ export default function TopicPage({ section, topic, searchService = '' }) {
       <p>O projeto ainda não definiu quais grupos esta categoria deve abranger nem quais necessidades pretende atender. É preciso definir esses pontos e confirmar a fonte competente antes de publicar orientações ou links.</p>
     </div>
   );
-  else if (r.length) body = <div className="grid">{r.map((id) => <ExternalLinkCard key={id} id={id} />)}</div>;
+  else if (r.length) body = <ResourceLinkList ids={r} />;
   else body = <EmptyNotice title={topic.title} />;
 
   const nearbyService = section.id === 'denuncias' && topic.id === 'crimes'

@@ -31,6 +31,22 @@ export function ExternalLinkCard({ id }) {
   );
 }
 
+export function ResourceLinkList({ ids = [] }) {
+  return (
+    <ul className="resource-list">
+      {ids.map((id) => {
+        const resource = RESOURCES[id];
+        if (!resource) return null;
+        const ext = resource.kind !== 'tel';
+        return <li key={id}>
+          <div><a href={resource.url} {...(ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{resource.title}{ext && <span className="sr-only"> (abre em nova aba)</span>}</a><p>{resource.desc}</p></div>
+          <span className="resource-action" aria-hidden="true">{ACTIONS[resource.kind]} →</span>
+        </li>;
+      })}
+    </ul>
+  );
+}
+
 export function EmergencyCard() {
   return (
     <section className="emergency" aria-labelledby="emerg-title">

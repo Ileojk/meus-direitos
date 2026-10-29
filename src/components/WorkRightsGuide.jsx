@@ -1,4 +1,4 @@
-import { ExternalLinkCard } from './Cards.jsx';
+import { ResourceLinkList } from './Cards.jsx';
 import { EDITORIAL_REVIEWED_AT } from '../data/editorial.js';
 import { GuideActions, LawCitation } from './GuideEvidence.jsx';
 
@@ -50,10 +50,7 @@ export function WorkRightsGuide() {
       </section>
       <section className="work-references" aria-labelledby="work-references-title">
         <h2 id="work-references-title" className="h2">Referências gerais</h2>
-        <div className="grid">
-          <ExternalLinkCard id="clt" />
-          <ExternalLinkCard id="trabalho-servicos" />
-        </div>
+        <ResourceLinkList ids={['clt', 'trabalho-servicos']} />
         <p className="source-date">Links e orientações revisados em {new Date(`${EDITORIAL_REVIEWED_AT}T12:00:00`).toLocaleDateString('pt-BR')}. Confirme prazos e requisitos nos canais oficiais.</p>
       </section>
     </>

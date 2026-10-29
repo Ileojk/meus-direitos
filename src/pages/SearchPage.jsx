@@ -1,17 +1,17 @@
 import { useState } from 'react';
 import SearchBar from '../components/SearchBar.jsx';
 import { Breadcrumb, BackHome } from '../components/Layout.jsx';
-import { CategoryCard, ExternalLinkCard, SectionHeader } from '../components/Cards.jsx';
+import { CategoryCard, ResourceLinkList, SectionHeader } from '../components/Cards.jsx';
 import { searchSite } from '../data/search.js';
 
-function ResultGroup({ title, items, renderItem, limit = 8 }) {
+function ResultGroup({ title, items, renderItem, limit = 8, compact = false }) {
   const [showAll, setShowAll] = useState(false);
   const visibleItems = showAll ? items : items.slice(0, limit);
 
   return (
     <section className="search-results-group">
       <h2 className="h2">{title} <span className="result-count">({items.length})</span></h2>
-      <div className="grid">{visibleItems.map(renderItem)}</div>
+      {compact ? <ResourceLinkList ids={visibleItems.map((item) => item.id)} /> : <div className="grid">{visibleItems.map(renderItem)}</div>}
       {items.length > limit && (
         <button className="show-more" type="button" onClick={() => setShowAll(!showAll)}>
           {showAll ? 'Mostrar menos' : `Ver todos os ${items.length} resultados`}
@@ -30,7 +30,7 @@ export default function SearchPage({ q }) {
       {q && total === 0 && <div className="notice" role="status"><strong>Não encontrei resultados para essa busca.</strong><p>Tente palavras mais curtas, como aluguel, escola, golpe, emprego ou saúde.</p></div>}
       {sections.length > 0 && <ResultGroup key={`${q}-areas`} title="Áreas" items={sections} limit={6} renderItem={(section) => <CategoryCard key={section.id} href={section.href} icon={section.icon} title={section.title} desc={section.subtitle} />} />}
       {topics.length > 0 && <ResultGroup key={`${q}-temas`} title="Páginas e temas" items={topics} renderItem={(topic) => <CategoryCard key={topic.id} href={topic.href} icon={topic.icon} title={topic.title} desc={topic.subtitle} />} />}
-      {resources.length > 0 && <ResultGroup key={`${q}-fontes`} title="Fontes e serviços" items={resources} renderItem={(resource) => <ExternalLinkCard key={resource.id} id={resource.id} />} />}
+      {resources.length > 0 && <ResultGroup key={`${q}-fontes`} title="Fontes e serviços" items={resources} compact />}
       <div className="actions"><BackHome /></div>
     </div>
   );
