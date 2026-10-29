@@ -1,4 +1,5 @@
 import { RESOURCES, EMERGENCY_IDS, EMERGENCY_LABELS } from '../data/resources.js';
+import { Icon } from './Icon.jsx';
 
 export function SectionHeader({ title, sub, children }) {
   return <div className="section-header"><h1>{title}</h1>{sub && <p className="lead">{sub}</p>}{children}</div>;
@@ -7,7 +8,7 @@ export function SectionHeader({ title, sub, children }) {
 export function CategoryCard({ href, icon, title, desc, cta = 'Ver opções' }) {
   return (
     <a className="card" href={href}>
-      <span className="icon" aria-hidden="true">{icon}</span>
+      <span className="icon"><Icon name={icon} /></span>
       <h3>{title}</h3><p>{desc}</p>
       <span className="cta">{cta} →</span>
     </a>
@@ -15,7 +16,7 @@ export function CategoryCard({ href, icon, title, desc, cta = 'Ver opções' }) 
 }
 
 const ACTIONS = { site: 'Acessar site', tel: 'Ligar agora', whatsapp: 'Abrir WhatsApp' };
-const ICONS = { site: '🔗', tel: '📞', whatsapp: '💬' };
+const ICONS = { site: 'link', tel: 'phone', whatsapp: 'message' };
 
 export function ExternalLinkCard({ id }) {
   const r = RESOURCES[id];
@@ -23,7 +24,7 @@ export function ExternalLinkCard({ id }) {
   const ext = r.kind !== 'tel';
   return (
     <a className="card link-card" href={r.url} {...(ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
-      <span className="icon" aria-hidden="true">{ICONS[r.kind]}</span>
+      <span className="icon"><Icon name={ICONS[r.kind]} /></span>
       <h3>{r.title}</h3><p>{r.desc}</p>
       <span className="cta">{ACTIONS[r.kind]} →{ext && <span className="sr-only"> (abre em nova aba)</span>}</span>
     </a>

@@ -64,7 +64,8 @@ main:focus{outline:none}
 .card:focus-visible{border-color:var(--teal);box-shadow:0 0 0 4px rgba(42,127,127,.16)}
 .card h3{font-size:1.2rem}
 .card p{margin:0;color:var(--muted)}
-.card .icon{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:#e8f2f2;font-size:1.6rem}
+.card .icon{display:grid;place-items:center;width:52px;height:52px;border-radius:14px;background:#e8f2f2;color:var(--petrol)}
+.card .icon svg{display:block;width:27px;height:27px}
 .card .cta{margin-top:auto;padding-top:.5rem;font-weight:600;color:var(--teal)}
 .link-card .icon{background:#fdf5d8}
 /* emergency */
