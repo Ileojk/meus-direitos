@@ -6,10 +6,10 @@ export function Logo({ compact = false }) {
     <a className="logo" href="#/" aria-label="Meus Direitos — página inicial">
       <svg className="logo-mark" viewBox="0 0 56 40" width="56" height="40" aria-hidden="true" focusable="false">
         <path d="m2 14 5-2 4-4 7 2 4-3 7 2 6-2 6 2 5-1 5 3 4 1-2 4 2 3-4 3-3 4-4-1-3 4-4-1-4 3-4-2-4 2-3-3-4 1-2-4-4-1-1-4-4-1Z" fill="#164A5B" />
-        <circle cx="28" cy="14" r="4" fill="#fff" />
-        <path d="M20 27c.6-5 3.6-7.5 8-7.5s7.4 2.5 8 7.5c-2.3 2.3-5 3.4-8 3.4s-5.7-1.1-8-3.4Z" fill="#fff" />
+        <circle cx="28" cy="13.5" r="3.5" fill="#fff" />
+        <path d="M21 26c.5-4.2 3-6.2 7-6.2s6.5 2 7 6.2c-2 1.9-4.3 2.9-7 2.9s-5-1-7-2.9Z" fill="#fff" />
       </svg>
-      {!compact && <span className="logo-text">Meus <b>Direitos</b></span>}
+      {!compact && <span className="logo-text"><span>Meus</span><b>Direitos</b></span>}
     </a>
   );
 }

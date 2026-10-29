@@ -14,9 +14,10 @@ main:focus{outline:none}
 /* header */
 .header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line)}
 .header-in{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:68px}
-.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--petrol);font-family:Manrope,'Source Sans 3',system-ui,sans-serif;font-size:1.2rem;font-weight:500;letter-spacing:-.025em}
+.logo{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--petrol);font-family:Manrope,'Source Sans 3',system-ui,sans-serif;font-size:1.2rem;font-weight:500;letter-spacing:-.025em}
 .logo b{font-weight:800}
 .logo-mark{display:block;flex:none}
+.logo-text{display:flex;flex-direction:column;line-height:1.02}
 .nav{display:flex;gap:.25rem}
 .nav a,.mobile-menu a{padding:.6rem .8rem;border-radius:10px;text-decoration:none;color:var(--text);font-weight:500;font-size:.95rem}
 .nav a:hover,.mobile-menu a:hover{background:var(--bg)}
