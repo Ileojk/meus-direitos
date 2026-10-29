@@ -3,3 +3,4 @@ dist/
 .env
 .env.*
 !.env.example
+/backup-identidade-original-2026-10-29/

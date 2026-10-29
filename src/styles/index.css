@@ -1,8 +1,8 @@
 :root{--petrol:#164A5B;--teal:#2A7F7F;--yellow:#F2C94C;--bg:#F7F8F8;--text:#202426;--muted:#4a5559;--line:#dde3e4;--r:16px}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.0625rem;line-height:1.6;color:var(--text);background:var(--bg);overflow-x:hidden}
-h1,h2,h3{line-height:1.15;color:var(--petrol);margin:0}
+body{margin:0;font-family:'Source Sans 3',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:1.0625rem;line-height:1.6;color:var(--text);background:var(--bg);overflow-x:hidden}
+h1,h2,h3{font-family:Manrope,'Source Sans 3',system-ui,sans-serif;line-height:1.15;color:var(--petrol);margin:0}
 h1{font-size:clamp(2rem,5vw,3.25rem);font-weight:800;letter-spacing:-.02em}
 a{color:var(--teal)}
 :focus-visible{outline:3px solid var(--petrol);outline-offset:3px;border-radius:6px}
@@ -14,8 +14,9 @@ main:focus{outline:none}
 /* header */
 .header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line)}
 .header-in{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:68px}
-.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--petrol);font-size:1.25rem;font-weight:500}
+.logo{display:flex;align-items:center;gap:.6rem;text-decoration:none;color:var(--petrol);font-family:Manrope,'Source Sans 3',system-ui,sans-serif;font-size:1.2rem;font-weight:500;letter-spacing:-.025em}
 .logo b{font-weight:800}
+.logo-mark{display:block;flex:none}
 .nav{display:flex;gap:.25rem}
 .nav a,.mobile-menu a{padding:.6rem .8rem;border-radius:10px;text-decoration:none;color:var(--text);font-weight:500;font-size:.95rem}
 .nav a:hover,.mobile-menu a:hover{background:var(--bg)}

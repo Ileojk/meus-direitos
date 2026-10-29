@@ -4,11 +4,10 @@ import { SECTIONS } from '../data/site.js';
 export function Logo({ compact = false }) {
   return (
     <a className="logo" href="#/" aria-label="Meus Direitos — página inicial">
-      <svg viewBox="0 0 40 40" width="40" height="40" role="img" aria-label="Logo Meus Direitos">
-        <rect width="40" height="40" rx="11" fill="#164A5B" />
-        <path d="M11 27 L18 19 L24 23 L30 12" fill="none" stroke="#2A7F7F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx="11" cy="27" r="3.4" fill="#fff" /><circle cx="18" cy="19" r="3.4" fill="#fff" /><circle cx="24" cy="23" r="3.4" fill="#fff" />
-        <circle cx="30" cy="12" r="4.4" fill="#F2C94C" />
+      <svg className="logo-mark" viewBox="0 0 40 40" width="40" height="40" aria-hidden="true" focusable="false">
+        <rect width="40" height="40" rx="12" fill="#164A5B" />
+        <path d="M13 9h14a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-7l-5 4v-4h-2a4 4 0 0 1-4-4v-6a4 4 0 0 1 4-4Z" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="m13.5 16.5 4.2 4.2 8.8-8.2" fill="none" stroke="#F2C94C" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
       {!compact && <span className="logo-text">Meus <b>Direitos</b></span>}
     </a>
